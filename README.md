@@ -57,8 +57,8 @@
    @RequestMapping(value = "/exportShopList", method = RequestMethod.GET)
    @ResponseBody
    public void exportShopList( HttpServletResponse response) throws Exception{
-       JHShopInfo[] shopList = userService.getShopListByUserId(userInfo.getUserId());
-       if(jHShopInfolist == null || jHShopInfolist.length == 0){
+       List<JHShopInfo> shopList = new ArrayList<>();
+       if(shopList == null || shopList.length == 0){
            throw new AppException(ApiError.NO_DATA.getCode(), ApiError.NO_DATA.getMsg());
        }
        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -81,7 +81,7 @@
        String fileName = "门店列表-"+dateFormat.format(new Date(System.currentTimeMillis())) +".xls";
        String str = path + fileName;
        File file = new File(str);
-       ExcelHandleUtils.exportToExcel(file, sheetName, map, handlerMap, list);
+       ExcelHandleUtils.exportToExcel(file, sheetName, map, handlerMap, shopList);
        //清除buffer缓存
        response.reset();
        response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName,"UTF-8"));
