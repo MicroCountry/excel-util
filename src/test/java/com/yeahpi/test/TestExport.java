@@ -1,8 +1,10 @@
 package com.yeahpi.test;
 
 import com.yeahpi.handler.ColumnHandler;
+import com.yeahpi.handler.EnumColumnHandler;
 import com.yeahpi.handler.TestEnumColumnHandler;
 import com.yeahpi.handler.TimeDateColumnHandler;
+import com.yeahpi.model.TestEnum;
 import com.yeahpi.util.ExcelHandleUtils;
 
 import java.io.File;
@@ -31,12 +33,11 @@ public class TestExport {
         colMap.put("time", "时间");
 
         Map<String , ColumnHandler> handlerMap = new HashMap<>();
-        TestEnumColumnHandler enumColumnHandler = new TestEnumColumnHandler();
         TimeDateColumnHandler dateColumnHandler = new TimeDateColumnHandler();
-        handlerMap.put("code", enumColumnHandler);
+        handlerMap.put("code", new EnumColumnHandler<TestEnum>(TestEnum.class));
         handlerMap.put("time", dateColumnHandler);
 
-        File file = new File("/Users/apple/workspace/excel-util/test1.xls");
+        File file = new File("/Users/apple/workspace/excel-util/test2.xls");
         ExcelHandleUtils.exportToExcel(file, "测试", colMap, handlerMap, list);
     }
 }
