@@ -58,7 +58,7 @@
    @ResponseBody
    public void exportShopList( HttpServletResponse response) throws Exception{
        List<JHShopInfo> shopList = new ArrayList<>();
-       if(shopList == null || shopList.length == 0){
+       if(shopList == null || shopList.isEmpty()){
            throw new AppException(ApiError.NO_DATA.getCode(), ApiError.NO_DATA.getMsg());
        }
        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
