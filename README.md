@@ -52,3 +52,56 @@
            ExcelHandleUtils.exportToExcel(file, "测试", colMap, handlerMap, list);
        }
 ```
+ 3. controller导出接口
+ ```$xslt
+   @RequestMapping(value = "/exportShopList", method = RequestMethod.GET)
+   @ResponseBody
+   public void exportShopList( HttpServletResponse response) throws Exception{
+       JHShopInfo[] shopList = userService.getShopListByUserId(userInfo.getUserId());
+       if(jHShopInfolist == null || jHShopInfolist.length == 0){
+           throw new AppException(ApiError.NO_DATA.getCode(), ApiError.NO_DATA.getMsg());
+       }
+       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       Map<String,String> map = new LinkedHashMap<>();
+       map.put("shopName", "门店名称");
+       map.put("shopType", "门店类型");
+       map.put("shopStatus", "门店状态");
+       map.put("shopAddress", "门店地址");
+       map.put("shopContactName", "联系人");
+       map.put("shopTel", "电话");
+       map.put("shopMobile", "手机号码");
+       map.put("shopCreateTime", "创建时间");
+
+       Map<String , ColumnHandler> handlerMap = new HashMap<>();
+       TimeDateColumnHandler dateColumnHandler = new TimeDateColumnHandler();
+       handlerMap.put("shopType", new EnumColumnHandler<ShopType>(ShopType.class));
+       handlerMap.put("shopStatus", new EnumColumnHandler<ShopStatus>(ShopStatus.class));
+       handlerMap.put("shopCreateTime", dateColumnHandler);
+
+       String fileName = "门店列表-"+dateFormat.format(new Date(System.currentTimeMillis())) +".xls";
+       String str = path + fileName;
+       File file = new File(str);
+       ExcelHandleUtils.exportToExcel(file, sheetName, map, handlerMap, list);
+       //清除buffer缓存
+       response.reset();
+       response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName,"UTF-8"));
+       response.setContentType("application/octet-stream;charset=UTF-8");
+       response.setHeader("Pragma", "no-cache");
+       response.setHeader("Cache-Control", "no-cache");
+       response.setDateHeader("Expires", 0);
+
+       try {
+           FileInputStream fis = new FileInputStream(file);
+           byte[] b = new byte[fis.available()];
+           fis.read(b);
+           //获取响应报文输出流对象
+           ServletOutputStream out =response.getOutputStream();
+           //输出
+           out.write(b);
+           out.flush();
+           out.close();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+   }
+```
