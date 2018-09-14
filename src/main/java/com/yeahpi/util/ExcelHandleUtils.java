@@ -24,9 +24,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ExcelHandleUtils { 
-
-    private static SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+public class ExcelHandleUtils {
 
     /**
      * 把 excel中的每一个sheetName页的内容都到JSONArray中，
@@ -294,6 +292,7 @@ public class ExcelHandleUtils {
     }
 
     private static <T> void fillSheet(Sheet sheet, Map<String, String> headMap, Map<String, ColumnHandler> handlerMap, List<T> list, int startIndex, int size) throws Exception {
+        SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //定义存放T的字段名和描述名的数组
         String[] fieldNameArr = new String[headMap.size()];
         String[] fieldDescArr = new String[headMap.size()];
